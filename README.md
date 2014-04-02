@@ -1,2 +1,2 @@
-javascript-util
+Javascript Util
 ===============
