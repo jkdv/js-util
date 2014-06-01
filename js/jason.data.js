@@ -1,5 +1,121 @@
 (function(jk, undefined) {
 
+var Node = function(o) {
+	this.data = o;
+	this.prev = null;
+	this.next = null;
+};
+
+/*
+ * List
+ */
+jk.List = function() {
+	var first = null,
+		last = null,
+		size = 0;
+};
+
+jk.List.prototype.add = function(o) {
+	var node = new Node(o);
+	if (this.last == null) {
+		this.last = node;
+		this.first = node;
+		this.size = 1;
+	} else {
+		this.last.next = node;
+		node.prev = this.last;
+		this.last = node;
+		this.size++;
+	}
+};
+
+jk.List.prototype.get = function(index) {
+	if (index >= this.size || index < 0) {
+		return null;
+	} else {
+		var pointer = this.last;
+		for (var i = this.size - 1; i > index; i--)
+			pointer = pointer.prev;
+		return pointer.data;
+	}
+};
+
+jk.List.prototype.remove = function(o, comparer) {
+	if (arguments.length == 1 &&
+		typeof(arguments[0]) == "number") {
+		if (this.size <= o || o < 0)
+			return null;
+
+		if (this.size == 1) {
+			this.first = null;
+			this.last = null;
+			this.size = 0;
+		} else {
+			var pointer = this.last;
+			for (var i = this.size - 1; i > o; i--)
+				pointer = pointer.prev;
+			if (pointer.prev != null)
+				pointer.prev.next = pointer.next;
+			if (pointer.next != null)
+				pointer.next.prev = pointer.prev;
+			if (this.first == pointer)
+				this.first = this.first.next;
+			if (this.last == pointer)
+				this.last = this.last.prev;
+			pointer.prev = null;
+			pointer.next = null;
+			pointer.null;
+			this.size--;
+		}
+	} else if (arguments.length == 2 &&
+		typeof arguments[1]  == "function") {
+		var pointer = this.last;
+		while (pointer != null) {
+			if (comparer(o) == comparer(pointer.data))
+				break;
+			else
+				pointer = pointer.prev;
+		}
+		if (pointer.prev != null)
+			pointer.prev.next = pointer.next;
+		if (pointer.next != null)
+			pointer.next.prev = pointer.prev;
+		if (this.first == pointer)
+			this.first = this.first.next;
+		if (this.last == pointer)
+			this.last = this.last.prev;
+		pointer.prev = null;
+		pointer.next = null;
+		pointer.null;
+		this.size--;
+	}
+};
+
+jk.List.prototype.contains = function(o, comparer) {
+	if (typeof comparer != "function")
+		return;
+	var pointer = this.last;
+	while (pointer != null) {
+		if (comparer(o) == comparer(pointer.data))
+			return true;
+		else
+			pointer = pointer.prev;
+	}
+	return false;
+};
+
+jk.List.prototype.length = function(o) {
+	return this.size;
+};
+
+jk.List.prototype.printAll = function(printer) {
+	var pointer = this.first;
+	while (pointer != null) {
+		console.log(pointer.data);
+		pointer = pointer.next;
+	}
+};
+
 /*
  * Queue
  */
@@ -9,14 +125,8 @@ jk.Queue = function() {
 		size = 0;
 };
 
-var QueueNode = function(o) {
-	this.data = o;
-	this.prev = null;
-	this.next = null;
-};
-
 jk.Queue.prototype.enqueue = function(o) {
-	var node = new QueueNode(o);
+	var node = new Node(o);
 	if (this.last == null) {
 		this.last = node;
 		this.first = node;
@@ -26,7 +136,7 @@ jk.Queue.prototype.enqueue = function(o) {
 		this.last.prev = node;
 		this.last = node;
 		this.size++;
-	};
+	}
 };
 
 jk.Queue.prototype.dequeue = function() {
@@ -52,103 +162,26 @@ jk.Queue.prototype.length = function() {
 };
 
 jk.Queue.prototype.contains = function(o, comparer) {
-	console.log('This function has been deprecated.');
-
 	if (typeof comparer != "function")
 		return;
-
 	var pointer = this.last;
 	while (pointer != null) {
 		if (comparer(o) == comparer(pointer.data))
 			return true;
 		else
-			pointer = pointer.next;
-	};
+			pointer = pointer.prev;
+	}
 	return false;
 };
 
-jk.Queue.prototype.printAll = function(print) {
-	if (typeof print == "function") {
+jk.Queue.prototype.printAll = function(printer) {
+	if (typeof printer == "function") {
 		var pointer = this.last;
 		while (pointer != null) {
-			console.log(print(pointer.data));
+			console.log(printer(pointer.data));
 			pointer = pointer.next;
 		};
 	};
 };
 
-/*
- * Binary Search Tree
-
-jk.BinarySearchTree = function(c) {
-	var root = null,
-		comparer = c;
-};
-
-var TreeNode = function(o) {
-	this.data = o;
-	this.left = null;
-	this.right = null;
-	this.depth = 0;
-	this.parent = null;
-};
-
-jk.BinarySearchTree.prototype.findLeftmostLeaf = function(n) {
-	var leaf = n.left;
-	while (true) {
-		if (leaf.right == null)
-			break;
-		else
-			leaf = leaf.right;
-	};
-	return leaf;
-};
-
-jk.BinarySearchTree.prototype.findRightmostLeaf = function(n) {
-	var leaf = n.right;
-	while (true) {
-		if (leaf.left == null)
-			break;
-		else
-			leaf = leaf.left;
-	};
-	return leaf;
-};
-
-
-
-jk.BinarySearchTree.prototype.insert = function(o) {
-	var node = new TreeNode(o);
-	if (this.root == null) {
-		this.root = node;
-	} else {
-		var pointer = this.root;
-		while (true) {
-			node.parent = pointer;
-			node.depth++;
-			if (this.comparer(node.data) < this.comparer(pointer.data)) {
-				if (pointer.left != null) {
-					pointer = pointer.left;
-					continue;
-				} else {
-					pointer.left = node;
-					break;
-				};
-			} else {
-				if (pointer.right != null) {
-					pointer = pointer.right;
-					continue;
-				} else {
-					pointer.right = node;
-					break;
-				};
-			};
-		};
-	};
-};
-
-jk.BinarySearchTree.prototype.delete = function(o) {
-	
-};
- */
 }(window.jk = window.jk || {}));
