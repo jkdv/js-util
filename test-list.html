@@ -1,0 +1,28 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>List</title>
+	<script type="text/javascript" src="js/jason.data.js"></script>
+	<script type="text/javascript">
+		var l = new jk.List();
+		l.add(1);
+		l.add(2);
+		l.add(3);
+		l.add(4);
+		l.add(5);
+		//l.printAll();
+		l.remove(0);
+		//console.log(l.get(0));
+		l.remove(0);
+		//console.log(l.get(0));
+		l.remove(5, function(o) {
+			return o;
+		});
+		l.add(6);
+		l.printAll();
+	</script>
+</head>
+<body>
+</body>
+</html>
