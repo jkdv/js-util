@@ -7,15 +7,15 @@ var Node = function(o) {
 };
 
 /*
- * List
+ * ArrayList
  */
-jk.List = function() {
+jk.ArrayList = function() {
 	var first = null,
 		last = null,
 		size = 0;
 };
 
-jk.List.prototype.add = function(o) {
+jk.ArrayList.prototype.add = function(o) {
 	var node = new Node(o);
 	if (this.last == null) {
 		this.last = node;
@@ -29,7 +29,7 @@ jk.List.prototype.add = function(o) {
 	}
 };
 
-jk.List.prototype.get = function(index) {
+jk.ArrayList.prototype.get = function(index) {
 	if (index >= this.size || index < 0) {
 		return null;
 	} else {
@@ -40,7 +40,7 @@ jk.List.prototype.get = function(index) {
 	}
 };
 
-jk.List.prototype.remove = function(o, comparer) {
+jk.ArrayList.prototype.remove = function(o, comparer) {
 	if (arguments.length == 1 &&
 		typeof(arguments[0]) == "number") {
 		if (this.size <= o || o < 0)
@@ -91,7 +91,7 @@ jk.List.prototype.remove = function(o, comparer) {
 	}
 };
 
-jk.List.prototype.contains = function(o, comparer) {
+jk.ArrayList.prototype.contains = function(o, comparer) {
 	if (typeof comparer != "function")
 		return;
 	var pointer = this.last;
@@ -104,11 +104,11 @@ jk.List.prototype.contains = function(o, comparer) {
 	return false;
 };
 
-jk.List.prototype.length = function(o) {
+jk.ArrayList.prototype.length = function(o) {
 	return this.size;
 };
 
-jk.List.prototype.printAll = function(printer) {
+jk.ArrayList.prototype.printAll = function(printer) {
 	var pointer = this.first;
 	while (pointer != null) {
 		console.log(pointer.data);
