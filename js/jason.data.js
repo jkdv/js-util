@@ -184,4 +184,72 @@ jk.Queue.prototype.printAll = function(printer) {
 	};
 };
 
+/*
+ * Stack
+ */
+jk.Stack = function() {
+	var first = null,
+		last = null,
+		size = 0;
+};
+
+jk.Stack.prototype.push = function(o) {
+	var node = new Node(o);
+	if (this.last == null) {
+		this.last = node;
+		this.first = node;
+		this.size = 1;
+	} else {
+		this.last.next = node;
+		node.prev = this.last;
+		this.last = node;
+		this.size++;
+	}
+};
+
+jk.Stack.prototype.pop = function() {
+	var data = null;
+	if (this.last == null) {
+		return null;
+	} else if (this.first === this.last) {
+		data = this.last.data;
+		this.first = null;
+		this.last = null;
+		this.size--;
+	} else {
+		data = this.last.data;
+		this.last = this.last.prev;
+		this.last.next = null;
+		this.size--;
+	};
+	return data;
+};
+
+jk.Stack.prototype.length = function() {
+	return this.size;
+};
+
+jk.Stack.prototype.contains = function(o, comparer) {
+	if (typeof comparer != "function")
+		return;
+	var pointer = this.last;
+	while (pointer != null) {
+		if (comparer(o) == comparer(pointer.data))
+			return true;
+		else
+			pointer = pointer.prev;
+	}
+	return false;
+};
+
+jk.Stack.prototype.printAll = function(printer) {
+	if (typeof printer == "function") {
+		var pointer = this.last;
+		while (pointer != null) {
+			console.log(printer(pointer.data));
+			pointer = pointer.next;
+		};
+	};
+};
+
 }(window.jk = window.jk || {}));
