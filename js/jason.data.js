@@ -1,9 +1,15 @@
 (function(jk, undefined) {
 
 var Node = function(o) {
+	// for linear data structures
 	this.data = o;
 	this.prev = null;
 	this.next = null;
+	// for trees
+	this.key = o;
+	this.parent = null;
+	this.left = null;
+	this.right = null;
 };
 
 /*
@@ -45,7 +51,6 @@ jk.ArrayList.prototype.remove = function(o, comparer) {
 		typeof(arguments[0]) == "number") {
 		if (this.size <= o || o < 0)
 			return null;
-
 		if (this.size == 1) {
 			this.first = null;
 			this.last = null;
@@ -252,4 +257,94 @@ jk.Stack.prototype.printAll = function(printer) {
 	};
 };
 
+/*
+ * BianrySearchTree
+ */
+jk.BianrySearchTree = function() {
+	var root = null;
+}
+
+jk.BianrySearchTree.prototype.search = function(startNode, key) {
+	while (startNode != null && startNode.key != key) {
+        if (key < startNode.key)
+            startNode = startNode.left;
+        else
+            startNode = startNode.right;
+    }
+    return startNode;
+}
+
+jk.BianrySearchTree.prototype.searchMinimum = function(startNode) {
+	while (startNode != null && startNode.left != null)
+		startNode = startNode.left;
+	return startNode;
+}
+
+jk.BianrySearchTree.prototype.searchSuccessor = function(startNode) {
+	if (startNode.right != null)
+		return this.searchMinimum(startNode.right);
+	var pointer = startNode.parent;
+	while (pointer != null && startNode == pointer.right) {
+		
+	}
+}
+
+jk.BianrySearchTree.prototype.insert = function(key) {
+	var newNode = new Node(key);
+	var prevPointer = null;
+	var pointer = this.root;
+	while (pointer != null) {
+		prevPointer = pointer;
+		if (key < pointer.key)
+			pointer = pointer.left;
+		else
+			pointer = pointer.right;
+	}
+	newNode.parent = prevPointer;
+	if (prevPointer == null) // Tree is empty
+		this.root = newNode;
+	else if (key < prevPointer.key)
+		prevPointer.left = newNode;
+	else
+		prevPointer.right = newNode;
+}
+
+jk.BianrySearchTree.prototype.transplant = function(u, v) {
+	if (u.parent == null) // u is root
+		this.root = v;
+	else if (u == u.parent.left)
+		u.parent.left = v;
+	else
+		u.parent.right = v;
+	if (v != null)
+		v.parent = u.parent;
+}
+
+jk.BianrySearchTree.prototype.delete = function(key) {
+	var node = this.search(this.root, key);
+	if (node == null)
+		return false;
+	if (node.left == null)
+		this.transplant(node, node.right);
+	else if (node.right == null)
+		this.transplant(node, node.left);
+	else {
+		var successor = searchSuccessor(node);
+		if (successor.parent != node) {
+			this.transplant(successor, successor.right);
+			successor.right = node.right;
+			successor.right.parent = successor;
+		}
+		this.transplant(node, successor);
+		successor.left = node.left;
+		successor.left.parent = node;
+	}
+	return true;
+}
+
+/*
+jk.BianrySearchTree.prototype.getRoot = function() {
+	return this.root;
+}
+*/
 }(window.jk = window.jk || {}));
