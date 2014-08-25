@@ -1,7 +1,7 @@
 Javascript Util
 ===============
 <ul>
-<il>Array List</il>
+<li>Array List</li>
 <li>Queue</li>
 <li>Stack</li>
 <li>Binary Search Tree</li>
